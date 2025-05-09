@@ -39,6 +39,7 @@ def test_parse_inventory_comments_and_blank():
 192.168.1.10 22 user1 pass1
 
 # Another comment
+
 [db]
 192.168.1.20 3306 dbuser dbpass
 www.example.com 22 user3 pass3
@@ -58,6 +59,8 @@ def test_parse_inventory_missing_fields():
 [web]
 192.168.1.10
 192.168.1.11 2222
+
+# this one is diff
 www.example.com
 """
     with tempfile.NamedTemporaryFile('w+', delete=False) as f:

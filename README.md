@@ -26,19 +26,33 @@ pip install -r requirements.txt
 To test without real servers, you can launch the test containers:
 
 ```bash
-docker-compose up --build
+docker-compose -f docker/dev.docker-compose.yml up --build
 ```
 
-Don't forget to add a .env file. Could look like this :
+For running only the SSH servers without the orchestrator:
+
+```bash
+docker-compose -f docker/only_servers.docker-compose.yml up --build
+```
+
+For a production deployment:
+
+```bash
+docker-compose -f docker/prod.docker-compose.yml up --build
+```
+
+Don't forget to add a .env file. Could look like this:
 ```env
 USER=testuser
 PASSWORD=password
 ```
 
-## Example Inventory File (`demo_files/demo_inventory.ini`)
+## Example Inventory File Format
+
+The inventory file is an INI file that defines groups of servers and their connection information:
 
 ```ini
-# ip port username password
+# Format: ip port username password
 
 [webservers]
 127.0.0.1 2223 testuser password
@@ -49,7 +63,18 @@ PASSWORD=password
 127.0.0.1 2222 testuser password
 ```
 
-## Example Playbook (`demo_files/demo_playbook.yml`)
+You can omit the port (defaults to 22), username, and password if needed:
+
+```ini
+[webservers]
+example.com           # Uses default port 22, no user/pass
+example.org 8022      # Custom port, no user/pass
+example.net 22 myuser # With username, no password
+```
+
+## Example Playbook Format
+
+Playbooks are YAML files that define tasks to run on specific host groups:
 
 ```yaml
 ---
@@ -105,22 +130,69 @@ python main.py --playbook demo_files/demo_playbook.yml --inventory demo_files/de
     - Uses SSH (via Paramiko) to execute commands remotely.
     - Displays the results (stdout, stderr, return code) for each task and each host.
 
-## Structure of Main Files
+## Main Files
 
 - `main.py`: Entry point, task execution.
 - `parsers/hosts_parsers.py`: Parses the inventory.
 - `parsers/yaml_parser.py`: Parses the YAML playbook.
 - `execute_ssh.py`: Executes a command via SSH.
 - `demo_files/`: Examples of inventory and playbook.
-- `docker-compose.yml` + `fakeserver.Dockerfile`: To launch SSH Docker test servers.
-- `.env`: To be added manually.
+- `docker/*`: Docker configuration for testing and deployment.
+
+## Testing
+
+The project includes unit tests for all major components. To run the tests:
+
+```bash
+pytest
+```
+
+The tests cover:
+- SSH command execution
+- Inventory parsing
+- Playbook parsing
+- Main orchestration logic
+
+## Docker Deployment Options
+
+### Development Environment
+Launches both the SSH test servers and the orchestrator:
+
+```bash
+docker-compose -f docker/dev.docker-compose.yml up --build
+```
+
+### SSH Servers Only
+Launches only the SSH test servers without the orchestrator:
+
+```bash
+docker-compose -f docker/only_servers.docker-compose.yml up --build
+```
+
+### Production Environment
+For deploying the orchestrator in a production environment:
+
+```bash
+docker-compose -f docker/prod.docker-compose.yml up --build
+```
 
 ## Example Output
 
 ```
 === results for 'dbservers' (2 hosts) ===
 
---- Host: 127.0.0.1:2221 (user: testuser, group: dbservers) ---
+Host: 127.0.0.1:2221 (user: testuser, group: dbservers)
+  [Task] Uptime
+    [Command] uptime
+    [Exit code] 0
+    [stdout]
+      10:00:00 up 1 day,  2:34,  1 user,  load average: 0.00, 0.01, 0.05
+    [stderr]
+      (empty)
+  ...
+
+--------------------------------------------------------
+Host: 127.0.0.1:2222 (user: testuser, group: dbservers)
   [Task] Uptime
     [Command] uptime
     [Exit code] 0
@@ -135,4 +207,6 @@ python main.py --playbook demo_files/demo_playbook.yml --inventory demo_files/de
 
 - To test with Docker servers, ensure that the ports (2221-2224) are not in use.
 - You can adapt the inventory and playbook files to your needs.
-- Don't forget the .env file.
+- Make sure to create a `.env` file with your credentials.
+- The project uses concurrent execution to run tasks in parallel across all hosts for better performance.
+- For security, avoid storing plain text passwords in production inventories. Consider using SSH keys.

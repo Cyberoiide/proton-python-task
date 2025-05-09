@@ -1,10 +1,10 @@
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import pytest
-from unittest import mock
+import pytest # type: ignore
+from unittest import mock # type: ignore
 from execute_ssh import execute_ssh
-import paramiko
+import paramiko # type: ignore
 
 @mock.patch('execute_ssh.paramiko.SSHClient')
 def test_execute_ssh_success(mock_ssh_client):

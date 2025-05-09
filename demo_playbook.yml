@@ -7,10 +7,13 @@
     - name: Server disk usage
       bash: du -h
 
-- hosts: webservers
-  tasks:
-    - name: Server uptime
-      bash: uptime
+    - name: Server disk space
+      bash: df -h
 
-    - name: Server disk usage
-      bash: du -h
+# - hosts: webservers
+#   tasks:
+#     - name: Server uptime
+#       bash: uptime
+
+#     - name: Server disk usage
+#       bash: du -h

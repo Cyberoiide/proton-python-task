@@ -1,4 +1,6 @@
 import concurrent.futures
+import argparse
+import os
 from typing import List, Tuple, Dict, NamedTuple, Optional
 from parsers.yaml_parser import parse_playbook
 from parsers.hosts_parsers import parse_inventory
@@ -107,4 +109,15 @@ def main(playbook_file: str, inventory_file: str) -> None:
             print()
 
 if __name__ == "__main__":
-    main("demo_files/demo_playbook.yml", "demo_files/demo_inventory.ini")
+    parser = argparse.ArgumentParser(description="Mini SSH Orchestrator")
+    parser.add_argument(
+        "--playbook", type=str, default="demo_files/demo_playbook.yml",
+        help="Path to the YAML playbook"
+    )
+    parser.add_argument(
+        "--inventory", type=str, default="demo_files/demo_inventory.ini",
+        help="Path to the inventory file"
+    )
+    args = parser.parse_args()
+
+    main(args.playbook, args.inventory)

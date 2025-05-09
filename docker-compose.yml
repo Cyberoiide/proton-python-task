@@ -48,3 +48,19 @@ services:
       - PASSWORD=${PASSWORD}
     ports:
       - "2224:22" 
+
+  orchestrator:
+    build:
+      context: .
+      dockerfile: main.Dockerfile
+    depends_on:
+      - db1
+      - db2
+      - web1
+      - web2
+    volumes:
+      - ./demo_files:/app/demo_files
+    environment:
+      - PYTHONUNBUFFERED=1
+    stdin_open: true
+    tty: true

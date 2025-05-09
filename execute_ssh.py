@@ -14,6 +14,7 @@ def execute_ssh(host: str, username: str, command: str, password: Optional[str] 
     finally:
         client.close()
 
+# test values on local machine
 if __name__ == "__main__":
     code, out, err = execute_ssh("127.0.0.1", "testuser", "df -h", port=32769, password="password")
     print("Exit code:", code)

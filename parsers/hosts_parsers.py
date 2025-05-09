@@ -26,6 +26,7 @@ def parse_inventory(path: str) -> List[Host]:
                 hosts.append(Host(current_group, addr, port, user, password))
     return hosts
 
+# test values on local machine
 if __name__ == "__main__":
     hosts = parse_inventory("demo_inventory.ini")
     for host in hosts:

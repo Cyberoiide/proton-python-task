@@ -16,6 +16,7 @@ def parse_playbook(file_path: str) -> Dict[str, List[dict]]:
         except yaml.YAMLError as exc:
             raise ValueError(f"Error parsing YAML file: {exc}")
 
+# test values on local machine
 if __name__ == "__main__":
     parsed = parse_playbook("demo_playbook.yml")
     print(parsed)

@@ -86,13 +86,14 @@ PASSWORD=password
 
 ## How to Run the Project
 
-Run the main script by specifying the playbook and inventory to use (by default, it uses the files in `demo_files/`) :
+Run the main script by specifying a YAML playbook and optionally an inventory file.
 
 ```bash
-python main.py
+python main.py --playbook demo_files/demo_playbook.yml --inventory demo_files/demo_inventory.ini
 ```
 
-You can also modify the `main.py` file to point to other inventory or playbook files.
+- `--playbook`: **Required** – path to your playbook (YAML).
+- `--inventory`: *(Optional)* – path to your inventory (INI). Defaults to `/etc/playbook/hosts`.
 
 ## How It Works
 

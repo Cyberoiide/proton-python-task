@@ -57,7 +57,7 @@ def main(playbook_file: str, inventory_file: str):
             print(f"\n[!] no host found for '{group}'\n")
             continue
 
-        print(f"\n=== Résultats pour '{group}' ({len(hosts)} hosts) ===\n")
+        print(f"\n=== results for '{group}' ({len(hosts)} hosts) ===\n")
         results_by_host = {}
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future_to_host_task = {

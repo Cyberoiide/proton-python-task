@@ -6,6 +6,7 @@ from parsers.yaml_parser import parse_playbook
 from parsers.hosts_parsers import parse_inventory
 from execute_ssh import execute_ssh
 
+# this is just a simple tuple to hold host info
 class Host(NamedTuple):
     group: str
     addr: str
@@ -13,6 +14,7 @@ class Host(NamedTuple):
     user: str
     password: str
 
+# and this one's for task results
 class TaskResult(NamedTuple):
     addr: str
     port: int
@@ -23,13 +25,14 @@ class TaskResult(NamedTuple):
     stdout: str
     stderr: str
 
+# this function runs a task on a host
 def run_task_on_host(host: Host, task: dict) -> TaskResult:
     cmd = task.get("bash")
     label = task.get("name", cmd)
     try:
         code, out, err = execute_ssh(
             host=host.addr,
-            username=host.user or "root",
+            username=host.user or "root",  # defaulting to root
             command=cmd,
             password=host.password,
             port=host.port
@@ -56,6 +59,7 @@ def run_task_on_host(host: Host, task: dict) -> TaskResult:
             stderr=f"FAILED: {e}",
         )
 
+# just printing out the task results
 def print_task_result(result: TaskResult) -> None:
     print(f"  [Task] {result.task_name}")
     print(f"    [Command] {result.command}")
@@ -65,14 +69,15 @@ def print_task_result(result: TaskResult) -> None:
         for line in result.stdout.splitlines():
             print(f"      {line}")
     else:
-        print("      (vide)")
+        print("      (empty)") 
     print(f"    [stderr]")
     if result.stderr:
         for line in result.stderr.splitlines():
             print(f"      {line}")
     else:
-        print("      (vide)")
+        print("      (empty)")
 
+# main function
 def main(playbook_file: str, inventory_file: str) -> None:
     playbook = parse_playbook(playbook_file)
     raw_hosts = parse_inventory(inventory_file)
@@ -90,6 +95,7 @@ def main(playbook_file: str, inventory_file: str) -> None:
         print(f"\n=== results for '{group}' ({len(hosts)} hosts) ===\n")
         results_by_host = {}
 
+        # threading
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future_to_host_task = {
                 executor.submit(run_task_on_host, host, task): (host, task)

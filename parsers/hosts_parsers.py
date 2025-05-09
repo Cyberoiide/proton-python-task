@@ -20,9 +20,15 @@ def parse_inventory(path: str) -> List[Host]:
             elif current_group:
                 parts = line.split()
                 addr = parts[0]
-                port = int(parts[1]) if len(parts) > 1 else 22
-                user = parts[2] if len(parts) > 2 else None
-                password = parts[3] if len(parts) > 3 else None
+                # check if he second part is a digit (port), otherwise default to 22
+                if len(parts) > 1 and parts[1].isdigit():
+                    port = int(parts[1])
+                    user = parts[2] if len(parts) > 2 else None
+                    password = parts[3] if len(parts) > 3 else None
+                else:
+                    port = 22
+                    user = parts[1] if len(parts) > 1 else None
+                    password = parts[2] if len(parts) > 2 else None
                 hosts.append(Host(current_group, addr, port, user, password))
     return hosts
 

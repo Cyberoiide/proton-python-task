@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  db1:
+    build:
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
+    container_name: db1
+    env_file:
+      - ../.env
+    environment:
+      - USER=${USER}
+      - PASSWORD=${PASSWORD}
+    ports:
+      - "2221:22"
+  db2:
+    build:
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
+    container_name: db2
+    env_file:
+      - ../.env
+    environment:
+      - USER=${USER}
+      - PASSWORD=${PASSWORD}
+    ports:
+      - "2222:22"
+  web1:
+    build:
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
+    container_name: web1
+    env_file:
+      - ../.env
+    environment:
+      - USER=${USER}
+      - PASSWORD=${PASSWORD}
+    ports:
+      - "2223:22"
+  web2:
+    build:
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
+    container_name: web2
+    env_file:
+      - ../.env
+    environment:
+      - USER=${USER}
+      - PASSWORD=${PASSWORD}
+    ports:
+      - "2224:22" 

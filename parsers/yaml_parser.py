@@ -1,6 +1,7 @@
 import yaml
 from typing import Dict, List, Any
 
+# parses a YAML playbook file and returns a dictionary of groups and tasks
 def parse_playbook(file_path: str) -> Dict[str, List[dict]]:
     with open(file_path, 'r') as stream:
         try:
@@ -8,6 +9,7 @@ def parse_playbook(file_path: str) -> Dict[str, List[dict]]:
             playbook = {}
             if data:
                 for item in data:
+                    # extract group and tasks from each item
                     group = item.get('hosts')
                     tasks = item.get('tasks', [])
                     if group:
@@ -18,6 +20,6 @@ def parse_playbook(file_path: str) -> Dict[str, List[dict]]:
 
 # test values on local machine
 if __name__ == "__main__":
-    parsed = parse_playbook("demo_playbook.yml")
+    parsed = parse_playbook("demo_files/demo_playbook.yml")
     print(parsed)
     # print(parsed["tasks"])

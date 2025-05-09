@@ -1,6 +1,7 @@
 import paramiko  # type: ignore
 from typing import Optional, Tuple
 
+# executes an SSH command on a remote host
 def execute_ssh(
     host: str,
     username: str,
@@ -9,7 +10,7 @@ def execute_ssh(
     port: int = 22,
     timeout: int = 10
     ) -> Tuple[int, str, str]:
-    
+
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 

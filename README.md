@@ -18,16 +18,7 @@ cd proton-python-task
 ```bash
 python3 -m venv env
 source env/bin/activate
-pip install -r requirements.txt  # (create if needed: see dependencies below)
-```
-
-**Main Dependencies:**
-- paramiko
-- pyyaml
-
-You can manually install them:
-```bash
-pip install paramiko pyyaml
+pip install -r requirements.txt
 ```
 
 3. **(Optional) Launch Docker test servers**

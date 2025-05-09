@@ -101,9 +101,11 @@ def main(playbook_file: str, inventory_file: str) -> None:
                 host_key = (result.addr, result.port, result.user)
                 results_by_host.setdefault(host_key, []).append(result)
 
-        for host_key, results in results_by_host.items():
+        for idx, (host_key, results) in enumerate(results_by_host.items()):
             addr, port, user = host_key
-            print(f"--- Host: {addr}:{port} (user: {user}, group: {group}) ---")
+            if idx > 0:
+                print("-" * 60)
+            print(f"Host: {addr}:{port} (user: {user}, group: {group})")
             for res in results:
                 print_task_result(res)
             print()

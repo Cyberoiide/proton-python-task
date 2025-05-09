@@ -1,0 +1,16 @@
+---
+- hosts: fakeserver
+  tasks:
+    - name: Server uptime
+      bash: uptime
+
+    - name: Server disk usage
+      bash: du -h
+
+- hosts: webservers
+  tasks:
+    - name: Server uptime
+      bash: uptime
+
+    - name: Server disk usage
+      bash: du -h

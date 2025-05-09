@@ -1,10 +1,17 @@
-from typing import List, Tuple
+from typing import List, Tuple, NamedTuple
 
-def parse_inventory(path: str) -> List[Tuple[str, str, int, str, str]]:
+class Host(NamedTuple):
+    group: str
+    ip: str
+    port: int
+    user: str
+    password: str
+
+def parse_inventory(path: str) -> List[Host]:
     hosts = []
-    with open(path, "r") as f:
+    with open(path, "r") as file:
         current_group = None
-        for line in f:
+        for line in file:
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
@@ -15,10 +22,11 @@ def parse_inventory(path: str) -> List[Tuple[str, str, int, str, str]]:
                 ip = parts[0]
                 port = int(parts[1]) if len(parts) > 1 else 22
                 user = parts[2] if len(parts) > 2 else None
-                pwd = parts[3] if len(parts) > 3 else None
-                hosts.append((current_group, ip, port, user, pwd))
+                password = parts[3] if len(parts) > 3 else None
+                hosts.append(Host(current_group, ip, port, user, password))
     return hosts
 
 if __name__ == "__main__":
     hosts = parse_inventory("demo_inventory.ini")
-    print(hosts)
+    for host in hosts:
+        print(host)

@@ -1,6 +1,7 @@
 import yaml
+from typing import Dict, List
 
-def parse_playbook(file_path: str) -> dict:
+def parse_playbook(file_path: str) -> Dict[str, List[dict]]:
     with open(file_path, 'r') as stream:
         try:
             data = yaml.safe_load(stream)
@@ -13,7 +14,7 @@ def parse_playbook(file_path: str) -> dict:
                         playbook[group] = tasks
             return playbook
         except yaml.YAMLError as exc:
-            raise ValueError(f"error parsing yaml file: {exc}")
+            raise ValueError(f"Error parsing YAML file: {exc}")
 
 if __name__ == "__main__":
     parsed = parse_playbook("demo_playbook.yml")

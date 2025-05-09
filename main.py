@@ -75,11 +75,8 @@ def main(playbook_file: str, inventory_file: str) -> None:
     playbook = parse_playbook(playbook_file)
     raw_hosts = parse_inventory(inventory_file)
 
-    hosts = [Host(group=group, ip=ip, port=port, user=user, password=pwd) # convert raw_hosts tuples to Host objects
-             for group, ip, port, user, pwd in raw_hosts]
-
     group_hosts: Dict[str, List[Host]] = {}
-    for host in hosts:
+    for host in raw_hosts:
         group_hosts.setdefault(host.group, []).append(host)
 
     for group, tasks in playbook.items():

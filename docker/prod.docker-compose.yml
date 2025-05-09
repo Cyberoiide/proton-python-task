@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  orchestrator-prod:
+    profiles: ["prod"]
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.prod
+    volumes:
+      - ../production_playbooks:/etc/playbook
+    # example: playbook required, inventory optional
+    command: ["--playbook", "/etc/playbook/run.yml"]

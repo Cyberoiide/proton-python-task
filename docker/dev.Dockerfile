@@ -6,4 +6,4 @@ COPY . /app
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-CMD ["python3", "main.py"]
+ENTRYPOINT ["python3", "main.py", "--inventory", "demo_files/demo_inventory.ini"]

@@ -113,12 +113,12 @@ def main(playbook_file: str, inventory_file: str) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Mini SSH Orchestrator")
     parser.add_argument(
-        "--playbook", type=str, default="demo_files/demo_playbook.yml",
+        "--playbook", type=str, required=True,
         help="Path to the YAML playbook"
     )
     parser.add_argument(
-        "--inventory", type=str, default="demo_files/demo_inventory.ini",
-        help="Path to the inventory file"
+        "--inventory", type=str, default="/etc/playbook/hosts",
+        help="Path to the inventory file (default: /etc/playbook/hosts)"
     )
     args = parser.parse_args()
 

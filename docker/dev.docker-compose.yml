@@ -2,11 +2,11 @@ version: '3.8'
 services:
   db1:
     build:
-      context: .
-      dockerfile: fakeserver.Dockerfile
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
     container_name: db1
     env_file:
-      - .env
+      - ../.env
     environment:
       - USER=${USER}
       - PASSWORD=${PASSWORD}
@@ -14,11 +14,11 @@ services:
       - "2221:22"
   db2:
     build:
-      context: .
-      dockerfile: fakeserver.Dockerfile
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
     container_name: db2
     env_file:
-      - .env
+      - ../.env
     environment:
       - USER=${USER}
       - PASSWORD=${PASSWORD}
@@ -26,11 +26,11 @@ services:
       - "2222:22"
   web1:
     build:
-      context: .
-      dockerfile: fakeserver.Dockerfile
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
     container_name: web1
     env_file:
-      - .env
+      - ../.env
     environment:
       - USER=${USER}
       - PASSWORD=${PASSWORD}
@@ -38,11 +38,11 @@ services:
       - "2223:22"
   web2:
     build:
-      context: .
-      dockerfile: fakeserver.Dockerfile
+      context: ..
+      dockerfile: docker/fakeserver.Dockerfile
     container_name: web2
     env_file:
-      - .env
+      - ../.env
     environment:
       - USER=${USER}
       - PASSWORD=${PASSWORD}
@@ -51,15 +51,16 @@ services:
 
   orchestrator:
     build:
-      context: .
-      dockerfile: main.Dockerfile
+      context: ..
+      dockerfile: docker/dev.Dockerfile
+    command: ["--playbook", "demo_files/demo_playbook.yml", "--inventory", "demo_files/docker_inventory.ini"]
     depends_on:
       - db1
       - db2
       - web1
       - web2
     volumes:
-      - ./demo_files:/app/demo_files
+      - ../demo_files:/app/demo_files
     environment:
       - PYTHONUNBUFFERED=1
     stdin_open: true

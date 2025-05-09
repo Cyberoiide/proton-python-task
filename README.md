@@ -61,12 +61,8 @@ PASSWORD=password
       bash: hostname
     - name: Disk usage
       bash: df -h
-    - name: Memory usage
-      bash: free -h || cat /proc/meminfo
     - name: Kernel version
       bash: uname -a
-    - name: List running processes
-      bash: ps aux --sort=-%mem | head -n 10
     - name: List /var/lib (DB data?)
       bash: ls -lh /var/lib
     - name: Check for MySQL/Postgres
@@ -76,12 +72,8 @@ PASSWORD=password
   tasks:
     - name: Uptime
       bash: uptime
-    - name: List root
-      bash: ls /
     - name: Disk usage
       bash: df -h
-    - name: Memory usage
-      bash: free -h || cat /proc/meminfo
     - name: Network interfaces
       bash: ip a || ifconfig
     - name: Open ports

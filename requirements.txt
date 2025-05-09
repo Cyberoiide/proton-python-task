@@ -1,2 +1,4 @@
 pyyaml
 paramiko
+pytest
+mock

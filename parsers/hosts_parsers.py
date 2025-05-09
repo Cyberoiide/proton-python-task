@@ -2,7 +2,7 @@ from typing import List, Tuple, NamedTuple
 
 class Host(NamedTuple):
     group: str
-    ip: str
+    addr: str
     port: int
     user: str
     password: str
@@ -19,11 +19,11 @@ def parse_inventory(path: str) -> List[Host]:
                 current_group = line[1:-1]
             elif current_group:
                 parts = line.split()
-                ip = parts[0]
+                addr = parts[0]
                 port = int(parts[1]) if len(parts) > 1 else 22
                 user = parts[2] if len(parts) > 2 else None
                 password = parts[3] if len(parts) > 3 else None
-                hosts.append(Host(current_group, ip, port, user, password))
+                hosts.append(Host(current_group, addr, port, user, password))
     return hosts
 
 if __name__ == "__main__":

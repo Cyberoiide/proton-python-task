@@ -1,5 +1,5 @@
 import yaml
-from typing import Dict, List
+from typing import Dict, List, Any
 
 def parse_playbook(file_path: str) -> Dict[str, List[dict]]:
     with open(file_path, 'r') as stream:

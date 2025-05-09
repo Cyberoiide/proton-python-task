@@ -6,13 +6,13 @@ from execute_ssh import execute_ssh
 
 class Host(NamedTuple):
     group: str
-    ip: str
+    addr: str
     port: int
     user: str
     password: str
 
 class TaskResult(NamedTuple):
-    ip: str
+    addr: str
     port: int
     user: str
     task_name: str
@@ -26,14 +26,14 @@ def run_task_on_host(host: Host, task: dict) -> TaskResult:
     label = task.get("name", cmd)
     try:
         code, out, err = execute_ssh(
-            host=host.ip,
+            host=host.addr,
             username=host.user or "root",
             command=cmd,
             password=host.password,
             port=host.port
         )
         return TaskResult(
-            ip=host.ip,
+            addr=host.addr,
             port=host.port,
             user=host.user,
             task_name=label,
@@ -44,7 +44,7 @@ def run_task_on_host(host: Host, task: dict) -> TaskResult:
         )
     except Exception as e:
         return TaskResult(
-            ip=host.ip,
+            addr=host.addr,
             port=host.port,
             user=host.user,
             task_name=label,
@@ -96,12 +96,12 @@ def main(playbook_file: str, inventory_file: str) -> None:
             }
             for future in concurrent.futures.as_completed(future_to_host_task):
                 result = future.result()
-                host_key = (result.ip, result.port, result.user)
+                host_key = (result.addr, result.port, result.user)
                 results_by_host.setdefault(host_key, []).append(result)
 
         for host_key, results in results_by_host.items():
-            ip, port, user = host_key
-            print(f"--- Host: {ip}:{port} (user: {user}, group: {group}) ---")
+            addr, port, user = host_key
+            print(f"--- Host: {addr}:{port} (user: {user}, group: {group}) ---")
             for res in results:
                 print_task_result(res)
             print()

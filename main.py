@@ -6,7 +6,7 @@ from execute_ssh import execute_ssh
 
 HostTuple = Tuple[str, str, int, str, str]  # (group, ip, port, user, password)
 
-def run_task_on_host(ip: str, port: int, user: str, password: str, task: dict) -> str:
+def run_task_on_host(ip: str, port: int, user: str, password: str, task: dict):
     cmd = task.get("bash")
     label = task.get("name", cmd)
     try:
@@ -17,12 +17,27 @@ def run_task_on_host(ip: str, port: int, user: str, password: str, task: dict) -
             password=password,
             port=port
         )
-        result = f"[{ip}] {label} (code: {code})\n{out.strip()}"
-        if err.strip():
-            result += f"\n[stderr] {err.strip()}"
-        return result
+        return {
+            "ip": ip,
+            "port": port,
+            "user": user,
+            "task_name": label,
+            "command": cmd,
+            "code": code,
+            "stdout": out.strip(),
+            "stderr": err.strip(),
+        }
     except Exception as e:
-        return f"[{ip}] {label} FAILED: {e}"
+        return {
+            "ip": ip,
+            "port": port,
+            "user": user,
+            "task_name": label,
+            "command": cmd,
+            "code": None,
+            "stdout": "",
+            "stderr": f"FAILED: {e}",
+        }
 
 def main(playbook_file: str, inventory_file: str):
     playbook = parse_playbook(playbook_file)  # Dict[group_name -> List[task]]
@@ -42,15 +57,38 @@ def main(playbook_file: str, inventory_file: str):
             print(f"\n[!] no host found for '{group}'\n")
             continue
 
-        print(f"\n=== trying for '{group}' ({len(hosts)} hosts) ===")
+        print(f"\n=== Résultats pour '{group}' ({len(hosts)} hosts) ===\n")
+        results_by_host = {}
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [
-                executor.submit(run_task_on_host, ip, port, user, pwd, task)
+            future_to_host_task = {
+                executor.submit(run_task_on_host, ip, port, user, pwd, task): (ip, port, user, task)
                 for _, ip, port, user, pwd in hosts
                 for task in tasks
-            ]
-            for future in concurrent.futures.as_completed(futures):
-                print(future.result())
+            }
+            for future in concurrent.futures.as_completed(future_to_host_task):
+                result = future.result()
+                host_key = (result["ip"], result["port"], result["user"])
+                results_by_host.setdefault(host_key, []).append(result)
+
+        for (ip, port, user), results in results_by_host.items():
+            print(f"--- Host: {ip}:{port} (user: {user}, group: {group}) ---")
+            for res in results:
+                print(f"  [Task] {res['task_name']}")
+                print(f"    [Command] {res['command']}")
+                print(f"    [Exit code] {res['code']}")
+                print(f"    [stdout]")
+                if res['stdout']:
+                    for line in res['stdout'].splitlines():
+                        print(f"      {line}")
+                else:
+                    print("      (vide)")
+                print(f"    [stderr]")
+                if res['stderr']:
+                    for line in res['stderr'].splitlines():
+                        print(f"      {line}")
+                else:
+                    print("      (vide)")
+            print()
 
 if __name__ == "__main__":
-    main("demo_playbook.yml", "demo_inventory.ini")
+    main("demo_files/demo_playbook.yml", "demo_files/demo_inventory.ini")

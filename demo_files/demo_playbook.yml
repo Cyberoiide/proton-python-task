@@ -1,0 +1,42 @@
+---
+- hosts: dbservers
+  tasks:
+    - name: Uptime
+      bash: uptime
+    - name: Hostname
+      bash: hostname
+    - name: Disk usage
+      bash: df -h
+    - name: Memory usage
+      bash: free -h || cat /proc/meminfo
+    - name: Logged in users
+      bash: who
+    - name: Kernel version
+      bash: uname -a
+    - name: List running processes
+      bash: ps aux --sort=-%mem | head -n 10
+    - name: List /var/lib (DB data?)
+      bash: ls -lh /var/lib
+    - name: Check for MySQL/Postgres
+      bash: pgrep mysqld || pgrep postgres || echo "No DB process found"
+
+- hosts: webservers
+  tasks:
+    - name: Uptime
+      bash: uptime
+    - name: List root
+      bash: ls /
+    - name: Disk usage
+      bash: df -h
+    - name: Memory usage
+      bash: free -h || cat /proc/meminfo
+    - name: Network interfaces
+      bash: ip a || ifconfig
+    - name: Open ports
+      bash: netstat -tuln || ss -tuln
+    - name: Last 5 logins
+      bash: last -n 5 || who
+    - name: List /var/www (web root?)
+      bash: ls -lh /var/www || echo "/var/www not found"
+    - name: Check for nginx/apache
+      bash: pgrep nginx || pgrep apache2 || echo "No web server process found"

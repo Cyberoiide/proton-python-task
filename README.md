@@ -38,6 +38,12 @@ To test without real servers, you can launch the test containers:
 docker-compose up --build
 ```
 
+Don't forget to add a .env file. Could look like this :
+```env
+USER=testuser
+PASSWORD=password
+```
+
 ## Example Inventory File (`demo_files/demo_inventory.ini`)
 
 ```ini
@@ -123,6 +129,7 @@ You can also modify the `main.py` file to point to other inventory or playbook f
 - `execute_ssh.py`: Executes a command via SSH.
 - `demo_files/`: Examples of inventory and playbook.
 - `docker-compose.yml` + `fakeserver.Dockerfile`: To launch SSH Docker test servers.
+- `.env`: To be added manually.
 
 ## Example Output
 
@@ -144,3 +151,4 @@ You can also modify the `main.py` file to point to other inventory or playbook f
 
 - To test with Docker servers, ensure that the ports (2221-2224) are not in use.
 - You can adapt the inventory and playbook files to your needs.
+- Don't forget the .env file.

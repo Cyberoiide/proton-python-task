@@ -9,7 +9,7 @@ This project is a mini-orchestrator inspired by Ansible, written in Python, allo
 1. **Clone the repository**
 
 ```bash
-git clone <repo_url>
+git clone https://github.com/Cyberoiide/proton-python-task.git
 cd proton-python-task
 ```
 

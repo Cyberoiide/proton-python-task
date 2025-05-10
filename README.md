@@ -133,9 +133,12 @@ python main.py --playbook demo_files/demo_playbook.yml --inventory demo_files/de
 ## Main Files
 
 - `main.py`: Entry point, task execution.
+- `scripts/execute_ssh.py`: Executes a command via SSH.
+- `scripts/models.py`: Defines data models for Host and TaskResult.
+- `scripts/task_coordinator.py`: Coordinates task execution.
+- `scripts/task_runner.py`: Runs tasks on hosts.
 - `parsers/hosts_parsers.py`: Parses the inventory.
 - `parsers/yaml_parser.py`: Parses the YAML playbook.
-- `execute_ssh.py`: Executes a command via SSH.
 - `demo_files/`: Examples of inventory and playbook.
 - `docker/*`: Docker configuration for testing and deployment.
 
@@ -210,3 +213,62 @@ Host: 127.0.0.1:2222 (user: testuser, group: dbservers)
 - Make sure to create a `.env` file with your credentials.
 - The project uses concurrent execution to run tasks in parallel across all hosts for better performance.
 - For security, avoid storing plain text passwords in production inventories. Consider using SSH keys.
+
+---
+
+## Alternative Solution: Ansible + Jinja2 (see `another_version/`)
+
+Besides the main Python implementation, I also created a simpler solution using Ansible and Jinja2 templating, which you can find in the `another_version/` folder (discovered and thought about it after 30 hours into the project). This approach takes advantage of Ansible in orchestration while using Jinja2 to generate playbooks from a YAML description.
+
+### How the Ansible/Jinja2 Solution Works
+
+- **Input Format:** You start by providing a YAML file that describes host groups and tasks (check out `another_version/input.yaml`).
+
+- **Templating:** A Jinja2 template (`playbook.jinja2`) then converts this YAML into a standard Ansible playbook.
+
+- **Playbook Generation:** The script (`main.py` and `utils.py`) loads your YAML, renders the Jinja2 template and writes out a temporary Ansible playbook file.
+
+- **Execution:** The generated playbook is executed using `ansible-playbook` with your chosen inventory file.
+
+- **Dependencies:** You only need a few dependencies: `ansible-core`, `PyYAML` and `Jinja2` (see `another_version/requirements.txt`).
+
+### Example Workflow
+
+1. **Install dependencies:**
+
+   ```bash
+   pip install -r another_version/requirements.txt
+   ```
+
+2. **Prepare your input YAML:**
+
+   - See `another_version/input.yaml` for the format (host groups, tasks, bash commands).
+
+3. **Run the orchestrator:**
+
+   ```bash
+   python another_version/main.py another_version/input.yaml [inventory_file]
+   ```
+
+   - If no inventory file is given, it defaults to `/etc/playbook/hosts`.
+
+4. **(Optional) Use Docker test servers:**
+
+   - See instructions in `another_version/README.md` for launching test containers and using Docker-based inventories.
+
+### Pros and cons
+
+- **Pros:**
+
+  - Much less code to maintain.
+  - Leverages Ansible's robust SSH, inventory and error handling.
+  - Easy to extend with Ansible modules.
+
+- **Cons:**
+
+  - Less opportunity to demonstrate custom orchestration or system design skills.
+  - Relies on external tools (Ansible, Jinja2) rather than pure Python.
+
+This alternative is ideal for real-world use where reliability and maintainability are key. However, the main solution was built from scratch to showcase programming and design skills as required by the coding test.
+
+---

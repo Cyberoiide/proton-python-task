@@ -5,6 +5,8 @@ RUN apk update && apk add --no-cache openssh bash
 
 RUN adduser -D testuser && echo "testuser:password" | chpasswd
 
+RUN apk add --no-cache python3 py3-pip
+
 RUN mkdir -p /home/testuser/.ssh && \
     chown -R testuser:testuser /home/testuser/.ssh
 

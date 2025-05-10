@@ -1,0 +1,11 @@
+{% for group in input -%}
+- name: Execute block
+  hosts: "{{ group['hosts'] }}"
+  tasks:
+  {% for cmd in group['tasks'] -%}
+  - name: "{{ cmd['name'] }}"
+    ansible.builtin.shell: '{{ cmd["bash"] }}'
+    become: no
+    changed_when: false
+  {% endfor %}
+{% endfor %}

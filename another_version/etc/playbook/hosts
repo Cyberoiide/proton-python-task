@@ -1,0 +1,10 @@
+[webservers] 
+foo.example.com 
+bar.example.com 
+
+[dbservers] 
+one.example.com 
+two.example.com 
+three.example.com
+
+172.22.0.4

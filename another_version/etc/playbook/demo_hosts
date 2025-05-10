@@ -1,0 +1,7 @@
+[webservers]
+web1 ansible_host=127.0.0.1 ansible_port=2223 ansible_user=testuser ansible_ssh_pass=password ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+web2 ansible_host=127.0.0.1 ansible_port=2224 ansible_user=testuser ansible_ssh_pass=password ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+[dbservers]
+db1 ansible_host=127.0.0.1 ansible_port=2221 ansible_user=testuser ansible_ssh_pass=password ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+db2 ansible_host=127.0.0.1 ansible_port=2222 ansible_user=testuser ansible_ssh_pass=password ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
